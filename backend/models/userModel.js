@@ -47,4 +47,5 @@ userSchema.pre("save", async function (next) {
 });
 
 export const User = mongoose.model("User", userSchema);
+
 // import mongoose from "mongoose";

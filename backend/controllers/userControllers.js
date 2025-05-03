@@ -89,4 +89,23 @@ const authUser = asyncHandler(async(req, res) => {
     }
 });
 
-export { registerUser, authUser }; // Export the registerUser function for use in routes
+// for user chats data
+const allUsers = asyncHandler(async (req, res) => {
+    const keyword = req.query.search ? {
+
+        // here any one query is match , then return it
+        $or: [
+            {name : { $regex: req.query.search, $options: "i"} },
+            {email : { $regex: req.query.search, $options: "i"} },
+        ]
+    }
+    : {};
+
+    // query from databse
+    // isme sabki id chahiye siwaye uske jo user login hai
+    // except login user give me the output which is part of the keyword result
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id} }); // current user req.user._id ke equal nahi hona chahiye and user authorise hona chahiye matlab login hona chahiye
+    res.send(users); // Send the list of users as a response
+});
+
+export { registerUser, authUser, allUsers }; // Export the registerUser function for use in routes

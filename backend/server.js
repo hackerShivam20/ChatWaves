@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js"; // Import the database connection function
 import userRoutes from "./routes/userRoutes.js"; // Import user routes
+import chatRoutes from "./routes/chatRoutes.js"; // Import chat routes
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js"; // Import error handling middleware
 import mongoose from "mongoose"; // Import mongoose for MongoDB connection
 
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 // endpoints
 
 app.use("/api/user", userRoutes); // User routes
+app.use("/api/chat", chatRoutes); // create api for chat creation
 
 // function to handle when user go on another route
 app.use(notFound); // Handle 404 errors
