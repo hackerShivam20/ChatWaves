@@ -183,3 +183,8 @@ const removeFromGroup = asyncHandler(async (req, res) => {
 });
 
 export { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup }; // Export the accessChat function for use in other files
+
+
+
+
+// problem in adding and removing in group chat, not suddenly change in postman check it later
