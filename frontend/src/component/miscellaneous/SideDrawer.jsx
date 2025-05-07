@@ -15,15 +15,18 @@ import { IoChevronDownCircle } from "react-icons/io5";
 import React, { useState } from "react";
 import { Tooltip } from "../../components/ui/tooltip.jsx";
 import { ChatState } from "../../context/ChatProvider.jsx";
+import ProfileModal from "./ProfileModal.jsx";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState("");
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const { user } = ChatState();
 
   return (
+    <>
     <Box
       display="flex"
       justifyContent="space-between"
@@ -33,6 +36,10 @@ const SideDrawer = () => {
       borderRadius="lg"
       border="2px solid #e7e4e4"
       w="100%"
+      position={"sticky"}
+      top="0"
+      zIndex="10"
+      boxShadow="xs"
     >
       <Tooltip label="Search Users to chat" placement="bottom-end" hasArrow>
         <Button
@@ -141,17 +148,20 @@ const SideDrawer = () => {
           <Portal>
             <MenuPositioner>
               <MenuContent bg={"white"} borderRadius="lg" boxShadow="md">
-                <MenuItem
-                  variant="ghost"
-                  color="black"
-                  _hover={{ bg: "#E8E8E8" }}
-                  _active={{ bg: "#E8E8E8" }}
-                  _focus={{ boxShadow: "none" }}
-                  p={1}
-                  mr={2}
-                >
-                  My Profile
-                </MenuItem>
+                <ProfileModal user={user}>
+                  <MenuItem
+                    variant="ghost"
+                    color="black"
+                    _hover={{ bg: "#E8E8E8" }}
+                    _active={{ bg: "#E8E8E8" }}
+                    _focus={{ boxShadow: "none" }}
+                    p={1}
+                    mr={2}
+                    onClick={() => setIsProfileModalOpen(true)}
+                  >
+                    My Profile
+                  </MenuItem>
+                </ProfileModal>
                 {/* <MenuItem>Settings</MenuItem> */}
                 <Box height="1px" bg="gray.200" my="2" />
                 <MenuItem
@@ -172,6 +182,12 @@ const SideDrawer = () => {
         </MenuRoot>
       </div>
     </Box>
+          <ProfileModal
+  user={user}
+  open={isProfileModalOpen}
+  setOpen={setIsProfileModalOpen}
+/>   
+    </>
   );
 };
 
