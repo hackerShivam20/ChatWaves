@@ -5,23 +5,33 @@ const ChatContext = createContext()
 
 const ChatProvider = ({ children }) => {
 
-    const [user, setUser] = useState();
+    const [user, setUser] = useState(null);
+    const [selectedChat, setSelectedChat] = useState(null);
+    const [chats, setChats] = useState([]);
+
     const navigate = useNavigate();
 
     useEffect(() => {
+      try{
         const userInfo = JSON.parse(localStorage.getItem("userInfo"));
         setUser(userInfo);
 
         if(!userInfo){
             navigate("/");
         }
+      } catch (error) {
+    console.error("Invalid userInfo JSON:", error);
+    navigate("/");
+  }
     },[navigate]);
 
   return (
-    <ChatContext.Provider value={{user, setUser}}>
+    <ChatContext.Provider
+      value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats }}
+    >
       {children}
     </ChatContext.Provider>
-    )
+  );
 };
 
 export const ChatState = () => {

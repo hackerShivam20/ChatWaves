@@ -45,9 +45,14 @@ const ProfileModal = ({ user, open, setOpen, children }) => {
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
-            <Dialog.Content>
+            <Dialog.Content height={"410px"} bg={"orange"}>
               <Dialog.Header display={"flex"} justifyContent={"center"}>
-                <Dialog.Title fontSize={"40px"} fontFamily={"Work Sans"}>
+                <Dialog.Title
+                  fontSize={{ base: "30px", md: "40px" }}
+                  fontFamily={"Work Sans"}
+                  fontWeight={"extrabold"}
+                  color={"blackAlpha.900"}
+                >
                   {user.name}
                 </Dialog.Title>
               </Dialog.Header>
@@ -56,8 +61,8 @@ const ProfileModal = ({ user, open, setOpen, children }) => {
                 flexDir={"column"}
                 justifyContent={"space-between"}
                 alignItems={"center"}
-                gap={4}
-                padding={"20px"}
+                gap={2}
+                padding={"35px"}
               >
                 <Image
                   borderRadius={"full"}
@@ -66,8 +71,12 @@ const ProfileModal = ({ user, open, setOpen, children }) => {
                   alt={user.name}
                 />
                 <Text
-                  fontSize={{ base: "20px", md: "30px" }}
+                  fontSize={{ base: "18px", md: "24px" }}
                   fontFamily={"Work Sans"}
+                  fontWeight={"medium"}
+                  color={"blackAlpha.900"}
+                  textAlign="center"
+                  wordBreak="break-word"
                 >
                   Email: {user.email}
                 </Text>
@@ -75,11 +84,21 @@ const ProfileModal = ({ user, open, setOpen, children }) => {
 
               <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
-                  <Button variant="outline">Close</Button>
+                  <Button
+                    variant="outline"
+                    color={"blackAlpha.900"}
+                    _hover={{ bg: "red", color: "orange" }}
+                  >
+                    Close
+                  </Button>
                 </Dialog.ActionTrigger>
               </Dialog.Footer>
               <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
+                <CloseButton
+                  size="md"
+                  color={"blackAlpha.900"}
+                  _hover={{ bg: "red", color: "orange" }}
+                />
               </Dialog.CloseTrigger>
             </Dialog.Content>
           </Dialog.Positioner>
