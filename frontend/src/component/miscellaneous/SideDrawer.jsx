@@ -114,6 +114,7 @@ const SideDrawer = () => {
 
       setSelectedChat(data);
       setLoadingChat(false);
+      setOpen(false);
       // onclose();
     } catch (error) {
       // setLoadingChat(false);
@@ -417,11 +418,11 @@ const SideDrawer = () => {
       </Drawer.Root>
 
       {/* Profile Modal */}
-      <ProfileModal
+      {/* <ProfileModal
         user={user}
         open={isProfileModalOpen}
         setOpen={setIsProfileModalOpen}
-      />
+      /> */}
     </>
   );
 };

@@ -50,36 +50,54 @@ const MyChats = ({ fetchAgain }) => {
       flexDir="column"
       alignItems="center"
       p={3}
-      ml={2}
-      mr={2}
-      mt={-5}
-      bg="#F8F8F8"
+      bg="white"
       w={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
-      h={{ base: "100%", md: "96%" }}
-      position={{ base: "fixed", md: "relative" }}
+      // d={{ base: selectedChat ? "none" : "flex", md: "flex" }}
+      // flexDir="column"
+      // alignItems="center"
+      // p={3}
+      // ml={2}
+      // mr={2}
+      // mt={-5}
+      // bg="#F8F8F8"
+      // w={{ base: "100%", md: "31%" }}
+      // borderRadius="lg"
+      // borderWidth="1px"
+      // h={{ base: "100%", md: "96%" }}
+      // position={{ base: "fixed", md: "relative" }}
     >
       <Box
-        display="flex"
         pb={3}
         px={3}
         fontSize={{ base: "28px", md: "30px" }}
         fontFamily="Work sans"
-        fontWeight="bold"
-        w={"100%"} // full width
+        display="flex"
+        width="100%"
         justifyContent="space-between"
         alignItems="center"
+        // display="flex"
+        // pb={3}
+        // px={3}
+        // fontSize={{ base: "28px", md: "30px" }}
+        // fontFamily="Work sans"
+        // fontWeight="bold"
+        // w={"100%"} // full width
+        // justifyContent="space-between"
+        // alignItems="center"
       >
         My Chats
         <GroupChatModal>
           <Button
-            display={"flex"}
-            onClick={() => setSelectedChat("")}
-            border={"1px solid black"}
-            borderRadius={"full"}
-            _hover={{ border: "2px solid #38B2AC" }}
-            fontSize={{ base: "17px", md: "15px", lg: "17px" }}
+            display="flex"
+            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            // display={"flex"}
+            // onClick={() => setSelectedChat("")}
+            // border={"1px solid black"}
+            // borderRadius={"full"}
+            // _hover={{ border: "2px solid #38B2AC" }}
+            // fontSize={{ base: "17px", md: "15px", lg: "17px" }}
           >
             {/* <FaUserGroup size={20} /> */}
             <i className="fa-solid fa-user-plus"></i>
@@ -88,14 +106,22 @@ const MyChats = ({ fetchAgain }) => {
       </Box>
 
       <Box
-        d={"flex"}
-        flexDir={"column"}
-        p={3}
+        display="flex"
+        flexDir="column"
+        padding={3}
         bg="#F8F8F8"
-        w={"100%"}
-        h={"90%"} // full height
+        width="100%"
+        height="90%"
         borderRadius="lg"
-        overflow={"hidden"} // hide overflow
+        overflowY="hidden"
+        // d={"flex"}
+        // flexDir={"column"}
+        // p={3}
+        // bg="#F8F8F8"
+        // w={"100%"}
+        // h={"90%"} // full height
+        // borderRadius="lg"
+        // overflow={"hidden"} // hide overflow
       >
         {chats ? (
           <Stack overflowY={"scroll"}>
@@ -109,12 +135,12 @@ const MyChats = ({ fetchAgain }) => {
                 px={3}
                 py={2}
                 borderRadius="lg"
-                mb={2}
+                // mb={2}
               >
                 <Text>
-                  {chat.isGroupChat
-                    ? chat.chatName
-                    : getSender(loggedUser, chat.users)}
+                  {!chat.isGroupChat
+                    ? getSender(loggedUser, chat.users)
+                    : chat.chatName}
                 </Text>
               </Box>
             ))}

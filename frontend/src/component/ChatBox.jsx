@@ -12,11 +12,11 @@ const ChatBox = ({ fetchAgain, setFetchAgain }) => {
       p={"3"}
       bg={"white"}
       width={{ base: "100%", md: "68%" }}
-      height={{ base: "100%", md: "96%" }}
+      height={{ base: "100%" }}
       position={{ base: "fixed", md: "relative" }}
-      ml={2}
-      mt={-5}
-      mr={2}
+      // ml={2}
+      // mt={-5}
+      // mr={2}
       borderRadius={"lg"}
       borderWidth={"1px"}
     >
