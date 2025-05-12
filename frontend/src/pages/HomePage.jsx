@@ -52,8 +52,8 @@ function HomePage() {
             <Tabs.Trigger value="tab-1">SignUp</Tabs.Trigger>
             <Tabs.Trigger value="tab-2">Login</Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content value="tab-1"><SignUp/></Tabs.Content>
-          <Tabs.Content value="tab-2"><Login/></Tabs.Content>
+          <Tabs.Content value="tab-1"><SignUp /></Tabs.Content>
+          <Tabs.Content value="tab-2"><Login /></Tabs.Content>
         </Tabs.Root>
       </Box>
     </Container>

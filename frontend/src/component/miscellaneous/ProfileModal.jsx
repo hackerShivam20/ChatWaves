@@ -7,11 +7,12 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 
 const ProfileModal = ({ user, open, setOpen, children }) => {
 //   const [open, setOpen] = useState(false);
+
+if (!user) return null;
 
   return (
     <>
@@ -20,7 +21,6 @@ const ProfileModal = ({ user, open, setOpen, children }) => {
       ) : (
         <IconButton
           display={{ base: "flex" }}
-          icon={<IoEyeSharp />} // nahi dikh raha hai kuch karenge baad me
           onClick={() => setOpen(!open)} // toggle the modal
           fontSize="20px"
           color="black" // icon color
@@ -30,7 +30,9 @@ const ProfileModal = ({ user, open, setOpen, children }) => {
             color: "white", // icon color on hover
             bg: "blackAlpha.700", // background on hover
           }}
-        />
+        >
+          <IoEyeSharp />
+        </IconButton>
       )}
 
       {/* main thing is here */}

@@ -28,14 +28,14 @@ import Chatloading from "../Chatloading.jsx";
 import UserListItem from "../UserAvatars/UserListItem.jsx";
 
 const SideDrawer = () => {
+
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState("");
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
-
-  const [open, setOpen] = useState(false);
 
   const { user, setSelectedChat, chats, setChats } = ChatState();
 

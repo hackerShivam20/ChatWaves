@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom"; // Assuming you're using react-r
 import axios from "axios"; // Make sure to install axios if you haven't already
 
 function SignUp() {
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -224,7 +226,7 @@ function SignUp() {
             borderColor: "blue.500",
             boxShadow: "0 0 0 2px rgba(65, 137, 214, 0.5)",
           }}
-          type={show ? "text" : "password"}
+          type={showPassword ? "text" : "password"}
           placeholder="Enter Password"
           pr="3.5rem"
           onChange={(e) => setPassword(e.target.value)}
@@ -234,12 +236,11 @@ function SignUp() {
           position="absolute"
           right="8px"
           top="40%"
-          // transform="translateY(-50%)"
           bg="gray.200"
           _hover={{ bg: "gray.300" }}
-          onClick={handleClick}
+          onClick={() => setShowPassword(!showPassword)}
         >
-          {show ? "Hide" : "Show"}
+          {showPassword ? "Hide" : "Show"}
         </Button>
       </Box>
 
@@ -255,7 +256,7 @@ function SignUp() {
             borderColor: "blue.500",
             boxShadow: "0 0 0 2px rgba(65, 137, 214, 0.5)",
           }}
-          type={show ? "text" : "password"}
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Enter Confirm Password"
           pr="3.5rem"
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -265,12 +266,11 @@ function SignUp() {
           position="absolute"
           right="8px"
           top="40%"
-          // transform="translateY(-50%)"
           bg="gray.200"
           _hover={{ bg: "gray.300" }}
-          onClick={handleClick}
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
         >
-          {show ? "Hide" : "Show"}
+          {showConfirmPassword ? "Hide" : "Show"}
         </Button>
       </Box>
 

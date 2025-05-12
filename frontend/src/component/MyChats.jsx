@@ -5,12 +5,12 @@ import axios from 'axios';
 import { Box, Button, Stack, Text } from '@chakra-ui/react';
 import Chatloading from '../component/Chatloading';
 import { getSender } from '../config/ChatLogics';
+import GroupChatModal from './miscellaneous/GroupChatModal';
 // import { FaUserGroup } from "react-icons/fa6";
 
-const MyChats = () => {
-
+const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
-  const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
+  const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
 
   const fetchChats = async () => {
     try {
@@ -23,24 +23,26 @@ const MyChats = () => {
       // yahan par sare chat ke data hai chahe wo single chat ho ya group chat ho
       const { data } = await axios.get("/api/chat", config);
       // console.log(data);
-      
+
       setChats(data);
     } catch (error) {
       toaster.error("Failed to fetch chats", {
         position: "top-right",
         autoClose: 5000,
+        status: "warning",
+        title: "Same users selected!",
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
       });
     }
-  }
+  };
 
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <Box
@@ -49,6 +51,7 @@ const MyChats = () => {
       alignItems="center"
       p={3}
       ml={2}
+      mr={2}
       mt={-5}
       bg="#F8F8F8"
       w={{ base: "100%", md: "31%" }}
@@ -69,28 +72,30 @@ const MyChats = () => {
         alignItems="center"
       >
         My Chats
-        <Button
-          // display={{ base: "flex", md: "none" }}
-          onClick={() => setSelectedChat("")}
-          border={"1px solid black"}
-          borderRadius={"full"}
-          _hover={{ border: "2px solid #38B2AC" }}
-          fontSize={{ base: "17px", md: "15px", lg: "17px" }}
-        >
-          {/* <FaUserGroup size={20} /> */}
-          <i className="fa-solid fa-user-plus"></i>
-        </Button>
+        <GroupChatModal>
+          <Button
+            display={"flex"}
+            onClick={() => setSelectedChat("")}
+            border={"1px solid black"}
+            borderRadius={"full"}
+            _hover={{ border: "2px solid #38B2AC" }}
+            fontSize={{ base: "17px", md: "15px", lg: "17px" }}
+          >
+            {/* <FaUserGroup size={20} /> */}
+            <i className="fa-solid fa-user-plus"></i>
+          </Button>
+        </GroupChatModal>
       </Box>
 
       <Box
-      d={"flex"}
-      flexDir={"column"}
-      p={3}
-      bg="#F8F8F8"
-      w={"100%"}
-      h={"90%"} // full height
-      borderRadius="lg"
-      overflow={"hidden"} // hide overflow
+        d={"flex"}
+        flexDir={"column"}
+        p={3}
+        bg="#F8F8F8"
+        w={"100%"}
+        h={"90%"} // full height
+        borderRadius="lg"
+        overflow={"hidden"} // hide overflow
       >
         {chats ? (
           <Stack overflowY={"scroll"}>
@@ -106,8 +111,10 @@ const MyChats = () => {
                 borderRadius="lg"
                 mb={2}
               >
-              <Text>
-                  {chat.isGroupChat ? chat.chatName : getSender(loggedUser, chat.users)}
+                <Text>
+                  {chat.isGroupChat
+                    ? chat.chatName
+                    : getSender(loggedUser, chat.users)}
                 </Text>
               </Box>
             ))}
@@ -117,7 +124,7 @@ const MyChats = () => {
         )}
       </Box>
     </Box>
-  )
-}
+  );
+};
 
 export default MyChats
