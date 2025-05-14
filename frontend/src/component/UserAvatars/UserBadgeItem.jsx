@@ -22,7 +22,15 @@ const UserBadgeItem = ({user, handleFunction}) => {
       _hover={{ bg: "white", color: "orange" }}
     >
       {user.name}
-      <CloseButton ml={1} size="xs" _hover={{ bg: "red", color: "white" }} />
+      <CloseButton
+        ml={1}
+        size="xs"
+        _hover={{ bg: "red", color: "white" }}
+        onClick={(e) => {
+          e.stopPropagation(); // prevent event bubbling to parent
+          handleFunction();
+        }}
+      />
     </Box>
   );
 }

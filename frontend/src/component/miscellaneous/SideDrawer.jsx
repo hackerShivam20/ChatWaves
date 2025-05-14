@@ -34,7 +34,7 @@ const SideDrawer = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState("");
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const { user, setSelectedChat, chats, setChats } = ChatState();
@@ -254,7 +254,9 @@ const SideDrawer = () => {
             <Portal>
               <MenuPositioner>
                 <MenuContent bg={"white"} borderRadius="lg" boxShadow="md">
-                  <ProfileModal user={user}>
+                  <ProfileModal
+                    user={user}
+                  >
                     <MenuItem
                       variant="ghost"
                       color="black"
@@ -263,7 +265,7 @@ const SideDrawer = () => {
                       _focus={{ boxShadow: "none" }}
                       p={1}
                       mr={2}
-                      onClick={() => setIsProfileModalOpen(true)}
+                      // onClick={() => setIsProfileModalOpen(true)}
                     >
                       My Profile
                     </MenuItem>
@@ -420,8 +422,6 @@ const SideDrawer = () => {
       {/* Profile Modal */}
       {/* <ProfileModal
         user={user}
-        open={isProfileModalOpen}
-        setOpen={setIsProfileModalOpen}
       /> */}
     </>
   );

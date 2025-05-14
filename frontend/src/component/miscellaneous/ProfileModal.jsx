@@ -7,10 +7,11 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 
-const ProfileModal = ({ user, open, setOpen, children }) => {
-//   const [open, setOpen] = useState(false);
+const ProfileModal = ({ user, children }) => {
+  const [open, setOpen] = useState(false);
 
 if (!user) return null;
 
