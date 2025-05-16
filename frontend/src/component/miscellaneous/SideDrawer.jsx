@@ -254,9 +254,7 @@ const SideDrawer = () => {
             <Portal>
               <MenuPositioner>
                 <MenuContent bg={"white"} borderRadius="lg" boxShadow="md">
-                  <ProfileModal
-                    user={user}
-                  >
+                  <ProfileModal user={user}>
                     <MenuItem
                       variant="ghost"
                       color="black"

@@ -96,7 +96,7 @@ function SignUp() {
 
   const submitHandler = async () => {
     setLoading(true);
-    if (!name || !email || !password || !confirmPassword || !pic) {
+    if (!name || !email || !password || !confirmPassword) {
       toaster.create({
         title: "Please fill all the fields",
         status: "warning",

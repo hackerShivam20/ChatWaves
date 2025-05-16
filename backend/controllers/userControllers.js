@@ -15,18 +15,18 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // Check if password length is less than 6 characters
-    if (password.length < 6) {
-        res.status(400); // Set response status to 400 (Bad Request)
-        throw new Error("Password must be at least 6 characters"); // Throw an error if password is too short
-        return;
-    }
+    // if (password.length < 6) {
+    //     res.status(400); // Set response status to 400 (Bad Request)
+    //     throw new Error("Password must be at least 6 characters"); // Throw an error if password is too short
+    //     return;
+    // }
 
-    // Check if password length is greater than 20 characters
-    if (password.length > 20) {
-        res.status(400); // Set response status to 400 (Bad Request)
-        throw new Error("Password must be less than 20 characters"); // Throw an error if password is too long
-        return;
-    }
+    // // Check if password length is greater than 20 characters
+    // if (password.length > 20) {
+    //     res.status(400); // Set response status to 400 (Bad Request)
+    //     throw new Error("Password must be less than 20 characters"); // Throw an error if password is too long
+    //     return;
+    // }
 
     // Check if user already exists
     const userExists = await User.findOne({ email }); // Check if a user with the same email already exists

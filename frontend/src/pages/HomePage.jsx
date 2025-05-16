@@ -35,7 +35,7 @@ function HomePage() {
           textAlign={"center"}
           fontWeight={"bolder"}
         >
-          Chatify
+          ChatWaves
         </Text>
       </Box>
       <Box

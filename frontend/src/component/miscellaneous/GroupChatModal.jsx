@@ -38,7 +38,7 @@ const GroupChatModal = ({children}) => {
 
       setSearchResult(data);
       setLoading(false);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       toaster.error("Failed to search users", {
         position: "bottom-left",

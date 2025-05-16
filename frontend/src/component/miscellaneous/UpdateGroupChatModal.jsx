@@ -21,226 +21,225 @@ import { FormControl } from "@chakra-ui/form-control";
 import axios from "axios";
 import UserListItem from "../UserAvatars/UserListItem.jsx";
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
+  const [open, setOpen] = useState(false);
+  const [groupChatName, setGroupChatName] = useState("");
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [renameLoading, setRenameLoading] = useState(false);
 
-    const [open, setOpen] = useState(false);
-    const [groupChatName, setGroupChatName] = useState("");
-    const [search, setSearch] = useState("");
-    const [searchResult, setSearchResult] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [renameLoading, setRenameLoading] = useState(false);
+  const { user, selectedChat, setSelectedChat } = ChatState();
 
-    const { user, selectedChat, setSelectedChat } = ChatState();
+  const handleAddUser = async (user1) => {
+    // if user already exists in selected users
+    if (selectedChat.users.find((u) => u._id === user1._id)) {
+      toaster.create({
+        title: "User Already in Group!",
+        status: "warning",
+        type: "warning",
+        duration: 4000,
+        description: "User Already in Group!",
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
 
-    const handleAddUser = async (user1) => {
-      // if user already exists in selected users
-        if (selectedChat.users.find((u) => u._id === user1._id)) {
-            toaster.create({
-                title: "User Already in Group!",
-                status: "warning",
-                type: "warning",
-                duration: 4000,
-                description: "User Already in Group!",
-                isClosable: true,
-                position: "bottom",
-            });
-            return;
-        }
+    // check user is admin or not
+    if (selectedChat.groupAdmin._id !== user._id) {
+      toaster.create({
+        title: "Only admins can add someone!",
+        status: "warning",
+        type: "warning",
+        duration: 4000,
+        description: "Only admins can add someone!",
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
 
-        // check user is admin or not
-        if (selectedChat.groupAdmin._id !== user._id) {
-            toaster.create({
-                title: "Only admins can add someone!",
-                status: "warning",
-                type: "warning",
-                duration: 4000,
-                description: "Only admins can add someone!",
-                isClosable: true,
-                position: "bottom",
-            });
-            return;
-        }
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
 
-        try {
-            setLoading(true);
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            };
+      const { data } = await axios.put(
+        "/api/chat/groupadd",
+        {
+          groupChatId: selectedChat._id,
+          userId: user1._id,
+        },
+        config
+      );
 
-            const { data } = await axios.put(
-              "/api/chat/groupadd",
-              {
-                groupChatId: selectedChat._id,
-                userId: user1._id,
-              },
-              config
-            );
+      setFetchAgain(!fetchAgain);
+      setSelectedChat(data);
+      setLoading(false);
+    } catch (error) {
+      toaster.create({
+        title: "Error Occurred!",
+        status: "error",
+        type: "error",
+        duration: 5000,
+        description: error.response?.data?.message || "Something went wrong.",
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      // console.log(error);
+    }
+  };
 
-            setFetchAgain(!fetchAgain);
-            setSelectedChat(data);
-            setLoading(false);
-        } catch (error) {
-          toaster.create({
-            title: "Error Occurred!",
-            status: "error",
-            type: "error",
-            duration: 5000,
-            description: error.response?.data?.message || "Something went wrong.",
-            isClosable: true,
-            position: "bottom",
-          });
-          setLoading(false);
-          // console.log(error);
-        }
-    };
+  const handleRemove = async (user1) => {
+    if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
+      toaster.create({
+        title: "Only admins can remove someone!",
+        status: "error",
+        type: "error",
+        duration: 4000,
+        description: "Only admins can remove someone!",
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
 
-    const handleRemove = async (user1) => {
-      if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
-        toaster.create({
-          title: "Only admins can remove someone!",
-          status: "error",
-          type: "error",
-          duration: 4000,
-          description: "Only admins can remove someone!",
-          isClosable: true,
-          position: "bottom",
-        });
-        return;
-      }
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
 
-      try {
-        setLoading(true);
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
+      const { data } = await axios.put(
+        "/api/chat/groupremove",
+        {
+          groupChatId: selectedChat._id,
+          userId: user1._id,
+        },
+        config
+      );
 
-        const { data } = await axios.put(
-          "/api/chat/groupremove",
-          {
-            groupChatId: selectedChat._id,
-            userId: user1._id,
-          },
-          config
-        );
+      // agar jo user login hai wo hi apne aap ko remove kar de then jo chat hai wo emoty ho jayega
+      user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
 
-        // agar jo user login hai wo hi apne aap ko remove kar de then jo chat hai wo emoty ho jayega
-        user1._id === user._id
-        ? setSelectedChat(): setSelectedChat(data);
-        
-        setFetchAgain(!fetchAgain);
-        // setSelectedChat(data);
-        setLoading(false);
-      } catch (error) {
-        toaster.create({
-          title: "Error Occurred!",
-          status: "error",
-          type: "error",
-          duration: 5000,
-          description: error.response?.data?.message || "Something went wrong.",
-          isClosable: true,
-          position: "bottom",
-        });
-        setLoading(false);
-        // console.log(error);
-      }
-    };
-    
-    const handleRename = async () => {
-        if (!groupChatName) {
-          toaster.create({
-            title: "Error Occurred!",
-            status: "error",
-            type: "error",
-            duration: 1000,
-            description:"Enter Chat Name.",
-            // isClosable: true,
-            position: "bottom",
-          });
-            return;
-        }
-        
-        try {
-            setRenameLoading(true);
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            };
+      setFetchAgain(!fetchAgain);
+      fetchMessages();
+      // setSelectedChat(data);
+      setLoading(false);
+    } catch (error) {
+      toaster.create({
+        title: "Error Occurred!",
+        status: "error",
+        type: "error",
+        duration: 5000,
+        description: error.response?.data?.message || "Something went wrong.",
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      // console.log(error);
+    }
+  };
 
-            const { data } = await axios.put(
-                "/api/chat/rename",
-                {
-                    groupChatId: selectedChat._id,
-                    chatName: groupChatName,
-                },
-                config
-            );
+  const handleRename = async () => {
+    if (!groupChatName) {
+      toaster.create({
+        title: "Error Occurred!",
+        status: "error",
+        type: "error",
+        duration: 1000,
+        description: "Enter Chat Name.",
+        // isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
 
-            setSelectedChat(data);
-            setFetchAgain(!fetchAgain);
-            setRenameLoading(false);    
-            toaster.create({
-              title: "Whoa!",
-              status: "success",
-              // status: "error",
-              type: "success",
-              duration: 5000,
-              description: "Group Chat Name Updated Successfully.",
-              isClosable: true,
-              position: "top",
-            });
-        } catch (error) {
-          toaster.create({
-            title: "Error Occurred!",
-            status: "error",
-            type: "error",
-            duration: 5000,
-            description: error.response?.data?.message || "Something went wrong.",
-            isClosable: true,
-            position: "bottom",
-          });
-          setRenameLoading(false);
-          console.log(error);
-        }
-        setGroupChatName("");
-    };
+    try {
+      setRenameLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
 
-    const handleSearch = async (query) => {
-      setSearch(query);
-      if (!query) {
-        return;
-      }
-      try {
-        setLoading(true);
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
+      const { data } = await axios.put(
+        "/api/chat/rename",
+        {
+          groupChatId: selectedChat._id,
+          chatName: groupChatName,
+        },
+        config
+      );
 
-        const { data } = await axios.get(`/api/user?search=${search}`, config);
+      setSelectedChat(data);
+      setFetchAgain(!fetchAgain);
+      setRenameLoading(false);
+      toaster.create({
+        title: "Whoa!",
+        status: "success",
+        // status: "error",
+        type: "success",
+        duration: 5000,
+        description: "Group Chat Name Updated Successfully.",
+        isClosable: true,
+        position: "top",
+      });
+    } catch (error) {
+      toaster.create({
+        title: "Error Occurred!",
+        status: "error",
+        type: "error",
+        duration: 5000,
+        description: error.response?.data?.message || "Something went wrong.",
+        isClosable: true,
+        position: "bottom",
+      });
+      setRenameLoading(false);
+      console.log(error);
+    }
+    setGroupChatName("");
+  };
 
-        setSearchResult(data);
-        setLoading(false);
-        console.log(data);
-      } catch (error) {
-        toaster.create({
-          title: "Error Occurred!",
-          status: "error",
-          type: "error",
-          duration: 5000,
-          description: error.response?.data?.message || "Something went wrong.",
-          isClosable: true,
-          position: "bottom",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleSearch = async (query) => {
+    setSearch(query);
+    if (!query) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.get(`/api/user?search=${search}`, config);
+
+      setSearchResult(data);
+      setLoading(false);
+      console.log(data);
+    } catch (error) {
+      toaster.create({
+        title: "Error Occurred!",
+        status: "error",
+        type: "error",
+        duration: 5000,
+        description: error.response?.data?.message || "Something went wrong.",
+        isClosable: true,
+        position: "bottom",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -348,14 +347,13 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
                     display="flex"
                   />
                 ) : (
-                  searchResult
-                    ?.map((user) => (
-                      <UserListItem
-                        key={user._id}
-                        user={user}
-                        handleFunction={() => handleAddUser(user)}
-                      />
-                    ))
+                  searchResult?.map((user) => (
+                    <UserListItem
+                      key={user._id}
+                      user={user}
+                      handleFunction={() => handleAddUser(user)}
+                    />
+                  ))
                 )}
               </Dialog.Body>
 
