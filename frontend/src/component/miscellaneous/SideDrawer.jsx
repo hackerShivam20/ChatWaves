@@ -263,7 +263,7 @@ const SideDrawer = () => {
                       _focus={{ boxShadow: "none" }}
                       p={1}
                       mr={2}
-                      // onClick={() => setIsProfileModalOpen(true)}
+                      onClick={() => setIsProfileModalOpen(true)}
                     >
                       My Profile
                     </MenuItem>

@@ -9,12 +9,17 @@ import { FormControl } from '@chakra-ui/form-control';
 import { toaster } from '../components/ui/toaster';
 import axios from 'axios';
 import ScrollableChat from "./ScrollableChat";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000"; // Backend URL
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   // const[ sendMessage, setSendMessage] = useState(false);
+  const[ socketConnected, setSocketConnected] = useState(false);
 
   const { user, selectedChat, setSelectedChat } = ChatState();
 
@@ -39,6 +44,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       console.log(messages);
       setMessages(data);
       setLoading(false);
+
+      // connect socket.io
+      socket.emit("join chat", selectedChat._id);
+
     } catch (error) {
       console.log(error);
       toaster.create({
@@ -54,9 +63,33 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user); // take form server.js line 63
+    socket.on("connected", () => setSocketConnected(true));
+    // socket.on("typing", () => console.log("Typing..."));
+    // socket.on("stop typing", () => console.log("Stop Typing..."));
+  }, []);
+
+  useEffect(() => {
     fetchMessages();
     // eslint-disable-next-line
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  // for show real-time message
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      // agar selected chat nhi hai matlab right wala khali hai usme koi bhi chat open nhi hai
+      // ya fir jo message aaya hai uske alwa kisi aur ka chat khula hai then uske liye niche wali condition hai
+      if(!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+        // Show notification or update UI for new message in different chat
+      }
+      else{
+        // append new message to old message
+        setMessages([...messages, newMessageReceived]);
+      }
+    });
+  });
 
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
@@ -79,6 +112,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         );
 
         console.log(data);
+
+        // here we are sending message to all users in the chat
+        socket.emit("new message", data); // send message to all users in the chat
+
         // it append old message with new message
         setMessages([...messages, data]);
       } catch (error) {
@@ -171,6 +208,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 display={"flex"}
                 flexdir={"column"}
                 overflowy={"scroll"}
+                // scrollY={"auto"}
                 scrollbarwidth={"none"}
               >
                 {/* Messages will be displayed here */}
