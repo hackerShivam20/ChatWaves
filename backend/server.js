@@ -74,6 +74,10 @@ const io = new Server(server, {
       console.log(`User joined room: ${room}`);
     });
 
+    // Typing indicator Functionalities
+    socket.on("typing", (room) => socket.in(room).emit("typing"));
+    socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
     // socket for send or new message
     socket.on("new message", (newMessageReceived) => {
         var chat = newMessageReceived.chat;
@@ -88,9 +92,14 @@ const io = new Server(server, {
         });
     });
 
-    socket.on("disconnect", () => {
-      console.log("User disconnected");
+    socket.off("setup", () => {
+      console.log("USER DISCONNECTED");
+      socket.leave(userData._id); // Leave the user's room when they disconnect
     });
+
+    // socket.on("disconnect", () => {
+    //   console.log("User disconnected");
+    // });
   });
 
   // ✅ Start server

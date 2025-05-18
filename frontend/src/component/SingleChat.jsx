@@ -10,6 +10,8 @@ import { toaster } from '../components/ui/toaster';
 import axios from 'axios';
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
+import Lottie from 'react-lottie';
+import animationData from "../animations/typing.json"; // Import your animation data
 
 const ENDPOINT = "http://localhost:5000"; // Backend URL
 var socket, selectedChatCompare;
@@ -20,6 +22,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [newMessage, setNewMessage] = useState("");
   // const[ sendMessage, setSendMessage] = useState(false);
   const[ socketConnected, setSocketConnected] = useState(false);
+
+  // states for typing indicator functionality
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  }
 
   const { user, selectedChat, setSelectedChat } = ChatState();
 
@@ -66,8 +81,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket = io(ENDPOINT);
     socket.emit("setup", user); // take form server.js line 63
     socket.on("connected", () => setSocketConnected(true));
-    // socket.on("typing", () => console.log("Typing..."));
-    // socket.on("stop typing", () => console.log("Stop Typing..."));
+
+    // for typing indicator
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
   }, []);
 
   useEffect(() => {
@@ -93,6 +110,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
+      // FOR TYPING INDICATOR
+      socket.emit("stop typing", selectedChat._id)
       try {
         const config = {
           headers: {
@@ -137,6 +156,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     setNewMessage(e.target.value);
 
     // Write Indicator Logic here in Future
+    if (!socketConnected) return;
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 4000; // 4 seconds
+
+    setTimeout(() => {
+      var currentTime = new Date().getTime();
+      if (currentTime - lastTypingTime >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -227,6 +262,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               //   }
               // }}
             >
+              {/* Typing indicator */}
+              {isTyping ? <div>
+                <Lottie
+                options={defaultOptions}
+                width={70}
+                style={{ marginBottom: 15, marginLeft: 0 }}
+                />
+              </div> : (<></>)}
               <Input
                 variant={"filled"}
                 bg={"#E0E0E0"}
