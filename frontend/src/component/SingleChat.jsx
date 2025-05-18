@@ -8,7 +8,7 @@ import UpdateGroupChatModal from './miscellaneous/UpdateGroupChatModal';
 import { FormControl } from '@chakra-ui/form-control';
 import { toaster } from '../components/ui/toaster';
 import axios from 'axios';
-// import ScrollableChat from "./ScrollableChat";
+import ScrollableChat from "./ScrollableChat";
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
@@ -80,7 +80,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
         console.log(data);
         // it append old message with new message
-        setMessage([...messages, data]);
+        setMessages([...messages, data]);
       } catch (error) {
         console.log(error);
         toaster.create({
@@ -174,7 +174,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 scrollbarwidth={"none"}
               >
                 {/* Messages will be displayed here */}
-                {/* <ScrollableChat messages={messages} /> */}
+                <ScrollableChat messages={messages} />
               </div>
             )}
 
