@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { toaster } from "../../components/ui/toaster.jsx";
 import Chatloading from "../Chatloading.jsx";
 import UserListItem from "../UserAvatars/UserListItem.jsx";
+import { getSender } from "../../config/ChatLogics.jsx";
 
 const SideDrawer = () => {
 
@@ -37,7 +38,14 @@ const SideDrawer = () => {
   // const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ChatState();
 
   // logout button functionality
   const logoutHandler = () => {
@@ -211,30 +219,31 @@ const SideDrawer = () => {
                     p={1}
                     mr={2}
                   >
-                    Notification 1
-                  </MenuItem>
-                  <Box height="1px" bg="gray.200" my="2" />
-                  <MenuItem
-                    variant="ghost"
-                    // bg="white"
-                    color="black"
-                    _hover={{ bg: "#E8E8E8" }}
-                    _active={{ bg: "#E8E8E8" }}
-                    _focus={{ boxShadow: "none" }}
-                    p={1}
-                    mr={2}
-                  >
-                    Notification 2
-                  </MenuItem>
-                </MenuContent>
-              </MenuPositioner>
-            </Portal>
-          </MenuRoot>
+                    {!notification.length && "No New Messages"}
+                    {notification.map((notif) => (
+                      <MenuItem
+                        key={notif._id}
+                        color={"black"}
+                        onClick={() => {
+                          setSelectedChat(notif.chat);
+                          setNotification(notification.filter((n) => n !== notif));
+                        }}
+                        >
+                        {notif.chat.isGroupChat
+                          ? `New Message in ${notif.chat.chatName}`
+                          : `New Message from ${getSender(user, notif.chat.users)}`}
+                      </MenuItem>
+                    ))}
+                    </MenuItem>
+                  </MenuContent>
+                </MenuPositioner>
+              </Portal>
+            </MenuRoot>
 
-          {/* Profile Menu */}
-          <MenuRoot>
-            <MenuTrigger asChild>
-              <Button
+            {/* Profile Menu */}
+            <MenuRoot>
+              <MenuTrigger asChild>
+                <Button
                 variant="ghost"
                 color="black"
                 _hover={{ bg: "#E8E8E8" }}

@@ -36,7 +36,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     },
   }
 
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } =
+    ChatState();
 
   // here we fetch all messages of selected user with logged user
   const fetchMessages = async () => {
@@ -100,6 +101,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       // ya fir jo message aaya hai uske alwa kisi aur ka chat khula hai then uske liye niche wali condition hai
       if(!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
         // Show notification or update UI for new message in different chat
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
       }
       else{
         // append new message to old message
