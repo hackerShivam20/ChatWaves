@@ -198,52 +198,165 @@ const SideDrawer = () => {
                 _focus={{ boxShadow: "none" }}
                 size={"md"}
               >
-                <FaBell />
+                <Box position="relative">
+                  <FaBell />
+                  {notification.length > 0 && (
+                    <Box
+                      position="absolute"
+                      top="-1"
+                      right="-1"
+                      bg="red.500"
+                      color="white"
+                      borderRadius="full"
+                      fontSize="10px"
+                      fontWeight="bold"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      minW="4"
+                      h="4"
+                      px={0.5}
+                      zIndex={1}
+                    >
+                      {notification.length}
+                    </Box>
+                  )}
+                </Box>
               </Button>
             </MenuTrigger>
             <Portal>
               <MenuPositioner>
                 <MenuContent
-                  color="white"
+                  color={"black"}
                   bg={"white"}
                   borderRadius="lg"
                   boxShadow="md"
+                  width={"380px"}
                 >
                   <MenuItem
                     variant="ghost"
                     // bg="white"
                     color="black"
+                    // width={"50%"}
+                    // textWrap={"wrap"}
                     _hover={{ bg: "#E8E8E8" }}
                     _active={{ bg: "#E8E8E8" }}
                     _focus={{ boxShadow: "none" }}
                     p={1}
                     mr={2}
                   >
-                    {!notification.length && "No New Messages"}
+                    {notification.length === 0 ? (
+                      <MenuItem color={"black"}>No new messages</MenuItem>
+                    ) : (
+                      Object.values(
+                        notification.reduce((acc, notif) => {
+                          const chatId = notif.chat._id;
+                          if (!acc[chatId]) {
+                            acc[chatId] = {
+                              chat: notif.chat,
+                              count: 1,
+                              latestTime: new Date(notif.createdAt),
+                              latestNotification: notif,
+                            };
+                          } else {
+                            acc[chatId].count += 1;
+                            const notifTime = new Date(notif.createdAt);
+                            if (notifTime > acc[chatId].latestTime) {
+                              acc[chatId].latestTime = notifTime;
+                              acc[chatId].latestNotification = notif;
+                            }
+                          }
+                          return acc;
+                        }, {})
+                      )
+                        .sort((a, b) => b.latestTime - a.latestTime)
+                        .map(
+                          ({ chat, count, latestTime, latestNotification }) => {
+                            const timeStr = latestTime.toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            });
+                            const senderName = chat.isGroupChat
+                              ? chat.chatName
+                              : getSender(user, chat.users);
+
+                            return (
+                              <MenuItem
+                                key={chat._id}
+                                onClick={() => {
+                                  setSelectedChat(chat);
+                                  setNotification(
+                                    notification.filter(
+                                      (n) => n.chat._id !== chat._id
+                                    )
+                                  );
+                                }}
+                                _hover={{ bg: "#E8E8E8" }}
+                                _active={{ bg: "#E8E8E8" }}
+                                _focus={{ boxShadow: "none" }}
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                color="black"
+                                fontWeight={"bolder"}
+                                // px={3}
+                                // py={2}
+                              >
+                                <Box>
+                                  <Text fontWeight="extrabold" fontSize={"md"} mb={1}>
+                                    😊😀 {count} new message{count > 1 ? "s" : ""}{" "}
+                                    from {senderName} 😀😊
+                                  </Text>
+                                  
+                                  <Text fontSize="sm" color="gray.500" mt={1}>
+                                    ⌚{timeStr}
+                                  </Text>
+                                </Box>
+                              </MenuItem>
+                            );
+                          }
+                        )
+                    )}
+
+                    {/* {!notification.length && "No New Messages"}
                     {notification.map((notif) => (
                       <MenuItem
                         key={notif._id}
                         color={"black"}
                         onClick={() => {
                           setSelectedChat(notif.chat);
-                          setNotification(notification.filter((n) => n !== notif));
+                          setNotification(
+                            notification.filter(
+                              (n) => n.chat._id !== notif.chat._id
+                            )
+                          );
                         }}
-                        >
+
+                        // onClick={() => {
+                        //   setSelectedChat(notif.chat);
+                        //   setNotification(
+                        //     notification.filter((n) => n !== notif)
+                        //   );
+                        // }}
+                      >
                         {notif.chat.isGroupChat
                           ? `New Message in ${notif.chat.chatName}`
-                          : `New Message from ${getSender(user, notif.chat.users)}`}
+                          : `New Message from ${getSender(
+                              user,
+                              notif.chat.users
+                            )}`}
                       </MenuItem>
-                    ))}
-                    </MenuItem>
-                  </MenuContent>
-                </MenuPositioner>
-              </Portal>
-            </MenuRoot>
+                    ))} */}
+                  </MenuItem>
+                </MenuContent>
+              </MenuPositioner>
+            </Portal>
+          </MenuRoot>
 
-            {/* Profile Menu */}
-            <MenuRoot>
-              <MenuTrigger asChild>
-                <Button
+          {/* Profile Menu */}
+          <MenuRoot>
+            <MenuTrigger asChild>
+              <Button
                 variant="ghost"
                 color="black"
                 _hover={{ bg: "#E8E8E8" }}
