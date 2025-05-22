@@ -9,15 +9,16 @@ import {
   isSameUser,
 } from "../config/ChatLogics"; // adjust path as needed
 import { ChatState } from "../context/ChatProvider";
+import { useEffect, useRef } from "react";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
 
-  //   const bottomRef = useRef(null);
+    const bottomRef = useRef(null);
 
-  //   useEffect(() => {
-  //     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  //   }, [messages]);
+    useEffect(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
   return (
     <Box
@@ -71,7 +72,7 @@ const ScrollableChat = ({ messages }) => {
             </span>
           </div>
         ))}
-      {/* <div ref={bottomRef} /> */}
+      <div ref={bottomRef} />
     </Box>
   );
 };

@@ -231,7 +231,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             width={"100%"}
             height={"100%"}
             borderRadius={"lg"}
-            overflowY={"hidden"}
+            overflow={"hidden"}
           >
             {loading ? (
               <Spinner
@@ -243,17 +243,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 margin={"auto"}
               />
             ) : (
-              <div
+              <Box
+              flex={1}
                 className="messages"
                 display={"flex"}
-                flexdir={"column"}
-                overflowy={"scroll"}
-                // scrollY={"auto"}
-                scrollbarwidth={"none"}
+                flexDir={"column"}
+                overflowY={"auto"}
               >
                 {/* Messages will be displayed here */}
                 <ScrollableChat messages={messages} />
-              </div>
+              </Box>
             )}
 
             {/* for input message */}
