@@ -19,6 +19,13 @@ function SignUp() {
 
   const handleClick = () => setShow(!show);
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitHandler();
+    }
+  };
+
   const postDetails = (pics) => {
     // setLoading(true);
     if (pics === undefined) {
@@ -188,6 +195,7 @@ function SignUp() {
           w="100%"
           color={"black"}
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
       </Box>
 
@@ -207,6 +215,7 @@ function SignUp() {
           w="100%"
           color={"black"}
           onChange={(e) => setEmail(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
       </Box>
 
@@ -230,6 +239,7 @@ function SignUp() {
           placeholder="Enter Password"
           pr="3.5rem"
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <Button
           size="xs"
@@ -260,6 +270,7 @@ function SignUp() {
           placeholder="Enter Confirm Password"
           pr="3.5rem"
           onChange={(e) => setConfirmPassword(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <Button
           size="xs"

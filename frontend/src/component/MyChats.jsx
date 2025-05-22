@@ -6,6 +6,7 @@ import { Box, Button, Stack, Text } from '@chakra-ui/react';
 import Chatloading from '../component/Chatloading';
 import { getSender } from '../config/ChatLogics';
 import GroupChatModal from './miscellaneous/GroupChatModal';
+import { MdGroupAdd } from "react-icons/md";
 // import { FaUserGroup } from "react-icons/fa6";
 
 const MyChats = ({ fetchAgain }) => {
@@ -100,7 +101,8 @@ const MyChats = ({ fetchAgain }) => {
             // fontSize={{ base: "17px", md: "15px", lg: "17px" }}
           >
             {/* <FaUserGroup size={20} /> */}
-            <i className="fa-solid fa-user-plus"></i>
+            {/* <i className="fa-solid fa-user-plus"></i> */}
+            <MdGroupAdd />
           </Button>
         </GroupChatModal>
       </Box>
