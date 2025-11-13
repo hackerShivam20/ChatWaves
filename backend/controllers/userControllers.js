@@ -5,7 +5,7 @@ import { User } from "../models/userModel.js"; // Import the User model
 import generateToken from "../config/generateToken.js"; // Import the token generation function
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password, pic } = req.body; // Destructure the request body
+    const { name, email, password, pic } = req.body; // Destructure the request body from frontend
 
     // Check if all required fields are provided
     if (!name || !email || !password) {

@@ -14,11 +14,11 @@ import { useEffect, useRef } from "react";
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
 
-    const bottomRef = useRef(null);
+    // const bottomRef = useRef(null);
 
-    useEffect(() => {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+    // useEffect(() => {
+    //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [messages]);
 
   return (
     <Box
@@ -57,7 +57,7 @@ const ScrollableChat = ({ messages }) => {
                 backgroundColor:
                   m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0",
                 marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                marginTop: isSameUser(messages, m, i, user._id) ? 3 : 1,
+                marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
                 borderRadius: "20px",
                 padding: "8px 15px",
                 // gap:"2px",
@@ -72,7 +72,7 @@ const ScrollableChat = ({ messages }) => {
             </span>
           </div>
         ))}
-      <div ref={bottomRef} />
+      {/* <div ref={bottomRef} /> */}
     </Box>
   );
 };

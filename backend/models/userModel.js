@@ -35,6 +35,22 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password); // Compare the entered password with the hashed password
 };
 
+// userSchema.pre("save", async function (next) {
+
+//     pre("save") is a Mongoose middleware (hook).
+    
+//     It runs automatically before saving a document (e.g., user registration).
+    
+//     It gives you a chance to modify data (like hashing the password) before it's stored in MongoDB.
+    
+//     if (!this.isModified("password")) { next(); }
+    
+//     This checks if the password field has been changed or created.
+    
+//     If password is unchanged, skip hashing to avoid double-hashing an already hashed password.
+    
+//     next() continues to the actual .save() process.
+
 // save karne se pehle password ko hash form me karke then databsae me save karenge jisse security bani rahe
 // encrption of password before saving to the database
 userSchema.pre("save", async function (next) {
